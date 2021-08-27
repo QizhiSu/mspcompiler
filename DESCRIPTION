@@ -1,16 +1,40 @@
 Package: mspcompiler
-Title: What the Package Does (One Line, Title Case)
+Title: Compile Mass Spectral Libraries from Various Sources
 Version: 0.0.0.9000
 Authors@R: 
-    person(given = "First",
-           family = "Last",
+    person(given = "Qizhi",
+           family = "Su",
            role = c("aut", "cre"),
-           email = "first.last@example.com",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
-License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
-    license
+           email = "sukissqz@gmail.com",
+           comment = c(ORCID = "https://orcid.org/0000-0002-8124-997X"))
+Description: Mass spectral library is of great importance for annotating mass 
+    spectrometry data. There are virious libraries scatter around, be it 
+    commercial like NIST library or publicly available such as MoNA and GNPS. 
+    And yet, no tool is viable for compiling and organizing these libraries into
+    a neat, well-organized, and up-to-date library. MS-DIAL is one of the 
+    excellent open-source tools to process MS data, which uses a library in msp 
+    format for annotation purpose. Since version 4.70, MS-DIAL is capable of
+    viewing molecular structures making use of the SMILES field in the msp 
+    library file. However, some ready-made msp files do not have the SMILES field.
+    In the case of EI library, the msp file converted from the NIST library by 
+    lib2nist does not contain the RI (retention index) field which is an 
+    additional measure to increase the identification confidence in GC-MS data. 
+    Moreover, the GNPS library is in mgf format and therefore has to be first
+    converted into msp format and then combined with others. For this reason,
+    the mspcompiler package aims to offer ways to compile and organize the lastest
+    mass spectral libraries into a well-organized msp file that can be better 
+    used by other tools, mainly MS-DIAL. 
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
+Imports: 
+    future,
+    future.apply,
+    stringr
+Depends: 
+    R (>= 2.10)
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
