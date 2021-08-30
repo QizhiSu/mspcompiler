@@ -30,8 +30,12 @@ LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
 Imports: 
+    ChemmineOB (>= 1.26.0),
+    ChemmineR (>= 3.40.0),
     future,
     future.apply,
+    rio,
+    rlist,
     stringr
 Depends: 
     R (>= 2.10)
@@ -40,3 +44,6 @@ Suggests:
 Config/testthat/edition: 3
 URL: https://github.com/QizhiSu/mspcompiler
 BugReports: https://github.com/QizhiSu/mspcompiler/issues
+Remotes: 
+    girke-lab/ChemmineR,
+    girke-lab/ChemmineOB

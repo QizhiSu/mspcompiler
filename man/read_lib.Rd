@@ -33,9 +33,9 @@ This function supports parallel computing making use of the \pkg{future.apply}.
 Please see the vignette for more details.
 }
 \examples{
-EI <- system.file("EI.msp", package = "mspcompiler")
-MS2_mgf <- system.file("MS2.mgf", package = "mspcompiler")
+EI_file <- system.file("EI.msp", package = "mspcompiler")
+MS2_mgf_file <- system.file("MS2.mgf", package = "mspcompiler")
 
-EI <- read_lib(EI, format = "msp", type = "EI", remove_ri = FALSE)
-MS2_mgf <- read_lib(MS2_mgf, format = "mgf", type = "MS2")
+EI <- read_lib(EI_file, format = "msp", type = "EI", remove_ri = FALSE)
+MS2_mgf <- read_lib(MS2_mgf_file, format = "mgf", type = "MS2")
 }
