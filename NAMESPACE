@@ -13,11 +13,8 @@ export(remove_ri)
 export(remove_rt)
 export(reorganize_mona)
 export(separate_polarity)
-<<<<<<< HEAD
 export(write_EI_msp)
 export(write_MS2_msp)
-=======
->>>>>>> d2423f3b2343b617d4127e4f3cab0917d6cf8b41
 import(ChemmineOB)
 import(ChemmineR, except = c(groups, view))
 import(dplyr)
