@@ -7,15 +7,17 @@
 combine_mol2sdf(input, output)
 }
 \arguments{
-\item{input}{The location of the exported *.MOL folder from Lib2NIST.}
+\item{input}{The location of the exported *.MOL folder from Lib2NIST,
+e.g., "/home/nist.MOL".}
 
-\item{output}{The location where the sdf file will be stored and its name.}
+\item{output}{The location where the sdf file will be stored and its name,
+e.g., "/home/exported.sdf".}
 }
 \value{
 It will return no value but only creates a sdf file.
 }
 \description{
-\code{combine_mol2sdf} offer a way to combine multiple mol files in to
+\code{combine_mol2sdf} offers a way to combine multiple mol files in to
 a single sdf file removing duplicates.
 }
 \details{
@@ -27,5 +29,5 @@ each compound in the NIST library can be exported as a mol file. Every
 library entry will have one corresponding mol file. All these mol files will
 be stored in a folder with ".MOL" suffix. This function aims to combine all
 these mol files into a single sdf file which can be then used for retrieve
-SMILES for each entry.
+SMILES for each entry. This function supports parallel computing.
 }
