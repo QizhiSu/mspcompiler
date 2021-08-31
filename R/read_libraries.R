@@ -1,20 +1,26 @@
 #' Read msp/mgf mass spectral libraries
 #'
-#' \code{read_lib} read mass spectral libraries into R for further processing.
+#' \code{read_lib} offers a way to read mass spectral libraries into R
+#' for further processing.
 #'
 #' This is a generic function to read either EI or MS2 mass spectral libraries.
-#' The library can be either in msp or mgf form. For this reason, it is required
-#' to set the format and the type of the input library. The default is MS2 in
-#' msp format. In the case of EI mass spectral library, an additional boolean
-#' parameter "remove_ri" can be set to remove or keep the retention index (RI).
-#' This function supports parallel computing making use of the \pkg{future.apply}.
-#' Please see the vignette for more details.
+#' The library can be either in \code{msp} or \code{mgf} form. For this reason,
+#' it is required to set the format and the type of the input library. The
+#' default is \code{MS2} in \code{msp} format. In the case of EI mass spectral
+#' library, an additional Boolean parameter \code{remove_ri} can be set to
+#' remove or keep the retention index (RI). In the case of MS2 mass spectral
+#' library, an additional Boolean parameter \code{remove_rt} can be set to
+#' remove or keep the retention time (RT). This function supports parallel
+#' computing making use of the \pkg{future.apply}. Please see the vignette
+#' for more details.
 #'
-#' @param file Mass spectral library in msp or mgf format.
-#' @param format The format of the library, either msp or mgf.
-#' @param type The type of the library, either EI or MS2.
+#' @param file Mass spectral library in \code{msp} or \code{mgf} format.
+#' @param format The format of the library, either \code{msp} or \code{mgf}.
+#' @param type The type of the library, either \code{EI} or \code{MS2}.
 #' @param remove_ri A logical scalar only used in case of EI mass spectral
-#'   library. Should retention index (RI) be removed?
+#'   library. Should retention index (RI) be removed? \code{TRUE} or \code{FALSE}
+#' @param remove_rt A logical scalar only used in case of MS2 mass spectral
+#'   library. Should retention time (RT) be removed? \code{TRUE} or \code{FALSE}
 #'
 #' @return A \code{list} with each spectral entry as a list element for further
 #'   processing.
@@ -25,13 +31,16 @@
 #' @export
 #'
 #' @examples
+#' # The first 2 lines only indicate the location where the example files are
+#' # stored. You might not need them.
 #' EI_file <- system.file("EI.msp", package = "mspcompiler")
 #' MS2_mgf_file <- system.file("MS2.mgf", package = "mspcompiler")
 #'
-#' EI <- read_lib(EI_file, format = "msp", type = "EI", remove_ri = FALSE)
-#' MS2_mgf <- read_lib(MS2_mgf_file, format = "mgf", type = "MS2")
+#' EI <- read_lib(file = EI_file, format = "msp", type = "EI", remove_ri = FALSE)
+#' MS2_mgf <- read_lib(file = MS2_mgf_file, format = "mgf", type = "MS2")
 read_lib <-
-  function(file, format = "msp", type = "MS2", remove_ri = TRUE) {
+  function(file, format = "msp", type = "MS2",
+           remove_ri = TRUE, remove_rt = TRUE) {
     tmp <- readLines(file)
     # Individual compounds are recognized differently
     # depending on the format
@@ -132,10 +141,14 @@ read_lib <-
                                 precursor_type, ignore.case = TRUE)
           ion_mode <- cmp[grep('ion_?mode:', cmp, ignore.case = TRUE)]
           ion_mode <- gsub('ion_?mode: ', '', ion_mode, ignore.case = TRUE)
-          retention_time <- cmp[grep('^retention_?time:',
-                                     cmp, ignore.case = TRUE)]
-          retention_time <- gsub('^retention_?time: ', '',
-                                 retention_time, ignore.case = TRUE)
+          if (remove_rt) {
+            retention_time <- NA
+          } else {
+            retention_time <- cmp[grep('^retention_?time:',
+                                       cmp, ignore.case = TRUE)]
+            retention_time <- gsub('^retention_?time: ', '',
+                                   retention_time, ignore.case = TRUE)
+          }
           ccs <- cmp[grep('^ccs:', cmp, ignore.case = TRUE)]
           ccs <- gsub('^ccs: ', '', ccs, ignore.case = TRUE)
           collision_energy <- cmp[grep('^collision_?energy:',
@@ -264,3 +277,25 @@ read_lib <-
     # Return the organized list
     return(cmp_list)
   }
+
+
+#' A wrapper to read multiple msp files at a time
+#'
+#' \code{read_multilibs} offers a way to read multiple msp files at a time and
+#' combine them into a single file.
+#'
+#' When you are building your in-house libraries, you may probably have multiple
+#' msp files at hand (e.g., one msp for one group of compounds). To avoid
+#' empolying \code{read_lib} several times, this function provides a way to read
+#' all these files at once.
+#'
+#' @param folder The folder that contains multiple msp files.
+#'
+#' @return A single \code{list} combining all msp files
+#' @export
+#'
+read_multilibs <- function(folder) {
+  all_files <- list.files(path = folder, pattern = "*.msp", full.names = TRUE)
+  do.call(c, lapply(all_files, read_lib))
+}
+
