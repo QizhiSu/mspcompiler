@@ -4,10 +4,10 @@
 \alias{separate_polarity}
 \title{Separate positive and negative modes in MS2 library}
 \usage{
-separate_polarity(file, polarity)
+separate_polarity(lib, polarity)
 }
 \arguments{
-\item{file}{A MS2 library mixed with positive and negative modes.}
+\item{lib}{A MS2 library mixed with positive and negative modes.}
 
 \item{polarity}{The polarity, can be either "pos" or "neg"}
 }
