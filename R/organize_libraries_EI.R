@@ -146,9 +146,9 @@ clean_user_dbu <- function(file) {
 #' RI table.
 #'
 #' @param ri_dat The "ri.dat" file in the installation path
-#'   (e.g., "~/Programs/nist17/mssearch").
+#'   (e.g., "~/Programs/nist17/mssearch/nist_ri").
 #' @param user_dbu The "USER.DBU" file in the installation path
-#'   (e.g., "~/Programs/nist17/mssearch")
+#'   (e.g., "~/Programs/nist17/mssearch/nist_ri")
 #'
 #' @return A \code{data.frame} containing experimental RI and InChIKey assigned.
 #' @export

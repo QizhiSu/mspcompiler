@@ -8,7 +8,7 @@ Authors@R:
            email = "sukissqz@gmail.com",
            comment = c(ORCID = "https://orcid.org/0000-0002-8124-997X"))
 Description: Mass spectral library is of great importance for annotating mass 
-    spectrometry data. There are virious libraries scatter around, be it 
+    spectrometry data. There are various libraries scatter around, be it 
     commercial like NIST library or publicly available such as MoNA and GNPS. 
     And yet, no tool is viable for compiling and organizing these libraries into
     a neat, well-organized, and up-to-date library. MS-DIAL is one of the 
@@ -21,7 +21,7 @@ Description: Mass spectral library is of great importance for annotating mass
     additional measure to increase the identification confidence in GC-MS data. 
     Moreover, the GNPS library is in mgf format and therefore has to be first
     converted into msp format and then combined with others. For this reason,
-    the mspcompiler package aims to offer ways to compile and organize the lastest
+    the mspcompiler package aims to offer ways to compile and organize the latest
     mass spectral libraries into a well-organized msp file that can be better 
     used by other tools, mainly MS-DIAL. 
 License: MIT + file LICENSE
@@ -46,6 +46,8 @@ Imports:
 Depends: 
     R (>= 2.10)
 Suggests: 
+    rmarkdown,
+    knitr,
     parallel,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
@@ -54,3 +56,4 @@ BugReports: https://github.com/QizhiSu/mspcompiler/issues
 Remotes: 
     girke-lab/ChemmineR,
     girke-lab/ChemmineOB
+VignetteBuilder: knitr

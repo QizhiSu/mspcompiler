@@ -8,10 +8,10 @@ extract_ri(ri_dat, user_dbu)
 }
 \arguments{
 \item{ri_dat}{The "ri.dat" file in the installation path
-(e.g., "~/Programs/nist17/mssearch").}
+(e.g., "~/Programs/nist17/mssearch/nist_ri").}
 
 \item{user_dbu}{The "USER.DBU" file in the installation path
-(e.g., "~/Programs/nist17/mssearch")}
+(e.g., "~/Programs/nist17/mssearch/nist_ri")}
 }
 \value{
 A \code{data.frame} containing experimental RI and InChIKey assigned.
