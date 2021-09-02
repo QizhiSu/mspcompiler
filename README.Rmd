@@ -1,0 +1,51 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# mspcompiler
+
+<!-- badges: start -->
+<!-- badges: end -->
+
+The goal of mspcompiler is to offer ways to compile either EI or tandem mass
+spectral libraries from various sources, such as NIST (if you have it installed),
+MoNA, and GPNS, and organize them into a neat and up-to-date msp file that can 
+be used in MS-DIAL. 
+
+## Installation
+
+Install \pkg{mspcompiler} by trying the following code.
+
+``` r
+# install.packages("devtools")
+devtools::install_github("QizhiSu/mspcompiler", build_vignettes = TRUE)
+```
+If \pkg{ChemineR} and \pkg{ChemineOB} fail, please try:
+```{r, eval=FALSE}
+if (!requireNamespace("BiocManager", quietly = TRUE))
+        install.packages("BiocManager")
+
+    BiocManager::install("ChemmineR")
+
+    if (!requireNamespace("BiocManager", quietly = TRUE))
+        install.packages("BiocManager")
+
+    BiocManager::install("ChemmineOB")
+```
+
+Please read the vignettes to learn how to compile EI and tandem mass spectral 
+libraries.
+```{r, eval=FALSE}
+browseVignettes("mspcompiler")
+```

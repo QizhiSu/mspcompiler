@@ -43,6 +43,7 @@ combine_mol2sdf <- function(input, output) {
   # will be converted
   cid(sdfset) <- paste0("CMP", seq(length(sdfset)))
   sdfset <- sdfset[validSDF(sdfset)] # Important to remove invalid sdf
+
   write.SDF(sdfset, output)
   }
 
