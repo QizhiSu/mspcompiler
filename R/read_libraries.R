@@ -73,6 +73,7 @@ read_lib <-
         } else {
           RI <- cmp[grep('^retentionindex:', cmp, ignore.case = TRUE)]
           RI <- gsub('^retentionindex: ', '', RI, ignore.case = TRUE)
+          RI <- round(as.numeric(RI))
         }
         # Dealing with the spectrum
         peak_numbers <- cmp[grep('^num peaks:', cmp, ignore.case = TRUE)]
