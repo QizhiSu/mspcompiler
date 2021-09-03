@@ -34,9 +34,17 @@ if (!requireNamespace("BiocManager", quietly = TRUE))
     BiocManager::install("ChemmineOB")
 ```
 
+## Usage
+
 Please read the vignettes to learn how to compile EI and tandem mass
 spectral libraries.
 
 ``` r
 browseVignettes("mspcompiler")
 ```
+
+## Acknowledgement
+
+Many thanks to Miao YU, the author of the enviGCMS R package, for his
+help to the read\_lib function. I would also like to thank Dmitriy D.
+Matyushin for his hints to extract RI information from the NIST library.
