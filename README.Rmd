@@ -31,7 +31,7 @@ Install \pkg{mspcompiler} by trying the following code.
 # install.packages("devtools")
 devtools::install_github("QizhiSu/mspcompiler", build_vignettes = TRUE)
 ```
-If \pkg{ChemineR} and \pkg{ChemineOB} fail, please try:
+If ChemineR and ChemineOB fail, please try:
 ```{r, eval=FALSE}
 if (!requireNamespace("BiocManager", quietly = TRUE))
         install.packages("BiocManager")

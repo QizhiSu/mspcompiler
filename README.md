@@ -20,7 +20,7 @@ Install by trying the following code.
 devtools::install_github("QizhiSu/mspcompiler", build_vignettes = TRUE)
 ```
 
-If and fail, please try:
+If ChemineR and ChemineOB fail, please try:
 
 ``` r
 if (!requireNamespace("BiocManager", quietly = TRUE))
