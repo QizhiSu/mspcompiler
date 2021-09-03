@@ -156,6 +156,8 @@ nist_ri <- extract_ri("/D:/MS_libraries/ri.dat", "/D:/MS_libraries/USER.DBU")
 combine_ei <- assign_ri(combine_ei, nist_ri, polarity = "semi-polar")
 # At the end, disable parallel computing
 plan(sequential)
+# Then you can write it out
+write_EI_msp(combine_ei, "/D:MS_libraries/combine_ei.msp")
 ```
 
 ## MS2 libraries
@@ -226,6 +228,9 @@ combine_ms2_pos <- c(nist_ms2_pos, riken_ms2_pos, mona_ms2_pos, gnps_pos)
 combine_ms2_neg <- c(nist_ms2_neg, riken_ms2_neg, mona_ms2_neg, gnps_nge)
 # Disable parallel computing
 plan(sequential)
+# Then you can write them out separately
+write_MS2_msp(combine_ms2_pos, "/D:MS_libraries/combine_ms2_pos.msp")
+write_MS2_msp(combine_ms2_neg, "/D:MS_libraries/combine_ms2_neg.msp")
 ```
 
 ### Others
