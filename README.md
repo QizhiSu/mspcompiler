@@ -56,7 +56,7 @@ use the following settings in *Lib2NIST*:
     -   Enter which spectra should be exported in *List of Spectra IDs*.
 
     <figure>
-    <img src="Lib2NIST_define_subset.png" width="500" alt="Settings inside Define Subset in Lib2NIST Programe" /><figcaption aria-hidden="true">Settings inside <em>Define Subset</em> in Lib2NIST Programe</figcaption>
+    <img src="vignettes/Lib2NIST_define_subset.png" width="500" alt="Settings inside Define Subset in Lib2NIST Programe" /><figcaption aria-hidden="true">Settings inside <em>Define Subset</em> in Lib2NIST Programe</figcaption>
     </figure>
 
     -   The total number of spectra that your NIST library have can be
@@ -65,14 +65,14 @@ use the following settings in *Lib2NIST*:
         number of spectra your NIST library have.
 
     <figure>
-    <img src="check_number_of_spectra_nist.png" width="500" alt="Screenshot of checking total number of spectra in the MS Search Program" /><figcaption aria-hidden="true">Screenshot of checking total number of spectra in the MS Search Program</figcaption>
+    <img src="vignettes/check_number_of_spectra_nist.png" width="500" alt="Screenshot of checking total number of spectra in the MS Search Program" /><figcaption aria-hidden="true">Screenshot of checking total number of spectra in the MS Search Program</figcaption>
     </figure>
 
 3.  Select “Text File(.MSP) + MOLfiles linked by BOTH” in *Output
     Format*;
 
 4.  Select the library in *Input Libraries or Text Files* and *Convert*.
-    <img src="Lib2NIST_configuration.png" width="500" alt="Configuration of Lib2NIST" />
+    <img src="vignettes/Lib2NIST_configuration.png" width="500" alt="Configuration of Lib2NIST" />
 
 Once you have the \*.MSP file and the correspondent \*.MOL folder
 exported, you can use the following code to add *SMILES* and *Retention
