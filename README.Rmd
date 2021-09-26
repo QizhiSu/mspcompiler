@@ -28,7 +28,7 @@ be used in MS-DIAL.
 Install \pkg{mspcompiler} by trying the following code.
 
 ``` r
-# install.packages("devtools")
+install.packages("devtools")
 devtools::install_github("QizhiSu/mspcompiler", build_vignettes = TRUE)
 ```
 If ChemineR and ChemineOB fail, please try:
