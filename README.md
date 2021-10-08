@@ -74,9 +74,10 @@ use the following settings in *Lib2NIST*:
 4.  Select the library in *Input Libraries or Text Files* and *Convert*.
     <img src="vignettes/Lib2NIST_configuration.png" width="500" alt="Configuration of Lib2NIST" />
 
-Once you have the \*.MSP file and the correspondent \*.MOL folder
-exported, you can use the following code to add *SMILES* and *Retention
-Index (RI)*.
+Once you have the \*.MSP file (normally hundreds megabytes) and the
+correspondent \*.MOL folder (hundreds thousands .MOL files inside the
+folder) exported, you can use the following code to add *SMILES* and
+*Retention Index (RI)*.
 
 The whole process is time-consuming (several hours, depending on the
 capability of your PC), so we suggests to use parallel computing.
@@ -110,6 +111,11 @@ nist_ei_structure <- extract_structure("D:/MS_libraries/nist.sdf", "D:/MS_librar
 # please use "match = "inchikey". 
 nist_ei <- assign_smiles(nist_ei, nist_ei_structure, match = "name")
 ```
+
+In case you want to expand your library by adding publicly available
+libraries, continue with the instructions for each library. Otherwise,
+jump to the “combine all libraries” section to add RI values
+accordingly.
 
 ### RIKEN EI library
 
