@@ -42,11 +42,11 @@ separate_polarity <- function(lib, polarity) {
   if(polarity == "pos") {
     tmp <-
       rlist::list.filter(
-        lib, grepl("positive", .data$IonMode, ignore.case = TRUE))
+        lib, grepl("P", .data$IonMode, ignore.case = TRUE))
   } else {
     tmp <-
       rlist::list.filter(
-        lib, grepl("negative", .data$IonMode, ignore.case = TRUE))
+        lib, grepl("N", .data$IonMode, ignore.case = TRUE))
   }
 
   return(tmp)
