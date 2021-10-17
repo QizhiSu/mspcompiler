@@ -172,7 +172,7 @@ read_lib <-
           name <- gsub('^name=', '', name, ignore.case = TRUE)
           name <- gsub(' \\[?[0-9]?M(-|\\+).*$', '', name, ignore.case = TRUE)
           smiles <- cmp[grep('^smiles=', cmp, ignore.case = TRUE)]
-          smiles <- gsub('^smiles=', '', smiles, ignore.case = TRUE)
+          smiles <- trimws(gsub('^smiles=', '', smiles, ignore.case = TRUE))
           inchikey <- cmp[grep('^inchiaux=', cmp, ignore.case = TRUE)]
           inchikey <- gsub('^inchiaux=', '', inchikey, ignore.case = TRUE)
           formula <- NA
