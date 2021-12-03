@@ -17,6 +17,10 @@
 #'   e.g., "/home/nist.MOL".
 #' @param output The location where the sdf file will be stored and its name,
 #'   e.g., "/home/exported.sdf".
+#' @param use_filename In case you want to use the file name as the Molecule_Name
+#' in the sdf file, please use \code{use_filename = TRUE}. This is useful when
+#' you draw your own chemicals which might not have Molecule_Name in the .MOL files.
+#' With this option, you can use the name of the .MOL files.
 #'
 #' @return It will return no value but only creates a sdf file.
 #' @export
@@ -24,11 +28,26 @@
 #' @import future.apply
 #' @rawNamespace import(ChemmineR, except = c(groups, view))
 #' @import rlist
-combine_mol2sdf <- function(input, output) {
+combine_mol2sdf <- function(input, output, use_filename = FALSE) {
   # Read mol files into a single sdfset.
-  mols <- list.files(path = input, pattern = "*.MOL", full.names = TRUE)
-  sdfset <- future.apply::future_lapply(
-    mols, function(mol) read.SDFset(mol, skipErrors = TRUE))
+  mols <- list.files(path = input, pattern = "*.MOL",
+                     full.names = TRUE, ignore.case = TRUE)
+  # Allows to use file name as the compound name
+  # it is useful for home-draw chemicals which might not have Molecule_Name
+  if(use_filename) {
+    sdfset <- future.apply::future_lapply(
+      mols, function(mol) {
+        tmp <- read.SDFset(mol, skipErrors = TRUE)
+        name <- gsub(".*\\\\|.*/", "", mol)
+        name <- gsub("\\.MOL", "", name, ignore.case = TRUE)
+        tmp@SDF[[1]]@header[["Molecule_Name"]] <- name
+
+        return(tmp)
+    })
+  }else{
+    sdfset <- future.apply::future_lapply(
+      mols, function(mol) read.SDFset(mol, skipErrors = TRUE))
+  }
 
   # Remove duplicates based on "name" to save time and export the sdf file
   sdfset <- lapply(sdfset, "[[", 1)

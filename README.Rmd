@@ -61,18 +61,18 @@ in, for example, "C:/database/NIST14.L".
 
     * Enter which spectra should be exported in *List of Spectra IDs*. 
     
-    ![Settings inside *Define Subset* in Lib2NIST Programe](vignettes/Lib2NIST_define_subset.png){width=500px}
+    ![\nSettings inside *Define Subset* in Lib2NIST Programe](vignettes/Lib2NIST_define_subset.png){width=500px}
      
     * The total number of spectra that your NIST library have can be checked in the *MS Search*
     program (Options -> Libraries -> Add both *mainlib* and *relib*). Then you can
     see the number of spectra your NIST library have.
     
-    ![Screenshot of checking total number of spectra in the MS Search Program](vignettes/check_number_of_spectra_nist.png){width=500px}
+    ![\nScreenshot of checking total number of spectra in the MS Search Program](vignettes/check_number_of_spectra_nist.png){width=500px}
    
 3. Select "Text File(.MSP) + MOLfiles linked by BOTH" in *Output Format*;
 
 4. Select the library in *Input Libraries or Text Files* and *Convert*.
-    ![Configuration of Lib2NIST](vignettes/Lib2NIST_configuration.png){width=500px}
+    ![\nConfiguration of Lib2NIST](vignettes/Lib2NIST_configuration.png){width=500px}
 
 Once you have the \*.MSP file (normally hundreds megabytes) and the correspondent 
 \*.MOL folder (hundreds thousands .MOL files inside the folder) exported, you 

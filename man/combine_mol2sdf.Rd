@@ -4,7 +4,7 @@
 \alias{combine_mol2sdf}
 \title{Combine multiple mol files into a single sdf file and remove duplicates}
 \usage{
-combine_mol2sdf(input, output)
+combine_mol2sdf(input, output, use_filename = FALSE)
 }
 \arguments{
 \item{input}{The location of the exported *.MOL folder from Lib2NIST,
@@ -12,6 +12,11 @@ e.g., "/home/nist.MOL".}
 
 \item{output}{The location where the sdf file will be stored and its name,
 e.g., "/home/exported.sdf".}
+
+\item{use_filename}{In case you want to use the file name as the Molecule_Name
+in the sdf file, please use \code{use_filename = TRUE}. This is useful when
+you draw your own chemicals which might not have Molecule_Name in the .MOL files.
+With this option, you can use the name of the .MOL files.}
 }
 \value{
 It will return no value but only creates a sdf file.

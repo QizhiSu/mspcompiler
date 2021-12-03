@@ -70,7 +70,7 @@ separate_polarity <- function(lib, polarity) {
 #' @rawNamespace import(ChemmineR, except = c(groups, view))
 complete_mgf <- function(lib){
   future.apply::future_lapply(lib, function(x) {
-    if (x$Smiles != "N/A") {
+    if (x$Smiles != "N/A|''") {
       x$Formula <-
         ChemmineR::MF(ChemmineR::smiles2sdf(x$Smiles), addH = TRUE)[[1]]
     } else {

@@ -1,6 +1,6 @@
 Package: mspcompiler
 Title: Compile Mass Spectral Libraries from Various Sources
-Version: 0.0.0.9000
+Version: 0.1.1
 Authors@R: 
     person(given = "Qizhi",
            family = "Su",
@@ -28,7 +28,7 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 Imports: 
     ChemmineOB (>= 1.26.0),
     ChemmineR (>= 3.40.0),
