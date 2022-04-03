@@ -42,6 +42,7 @@ read_lib <-
   function(file, format = "msp", type = "MS2",
            remove_ri = TRUE, remove_rt = TRUE) {
     tmp <- readLines(file)
+    tmp <- gsub("ï»¿", "", tmp) # fix files that have different encoding
     # Individual compounds are recognized differently
     # depending on the format
     if (format == "msp") {
