@@ -220,6 +220,7 @@ read_lib <-
         }
 
         # Manipulation of peak matrix are the same for both msp and mgf
+        if(!is.null(peak_number)) peak_number <- "0"
         if (as.numeric(peak_number) > 0) {
           # Determine position of mass intensity pairs
           mass_inten_posi <- which(grepl('^[0-9]', cmp) & !grepl(': ', cmp))
