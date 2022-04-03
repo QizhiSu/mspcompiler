@@ -164,7 +164,7 @@ read_lib <-
           comment <- cmp[grep('^comments?:', cmp, ignore.case = TRUE)]
           comment <- gsub('^comments?: ', '', comment, ignore.case = TRUE)
           peak_numbers <- cmp[grep('^num peaks:', cmp, ignore.case = TRUE)]
-          peak_number <- gsub('^num peaks: ', '',
+          peak_number <- gsub('^num peaks: *', '',
                               peak_numbers, ignore.case = TRUE)
 
         # For mgf format
