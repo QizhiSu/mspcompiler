@@ -1,6 +1,6 @@
 Package: mspcompiler
 Title: Compile Mass Spectral Libraries from Various Sources
-Version: 0.1.2
+Version: 0.1.3
 Authors@R: 
     person(given = "Qizhi",
            family = "Su",
@@ -42,7 +42,8 @@ Imports:
     rlist,
     stats,
     stringr,
-    tibble
+    tibble,
+    webchem
 Depends: 
     R (>= 2.10)
 Suggests: 

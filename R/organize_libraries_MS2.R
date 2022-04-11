@@ -53,9 +53,9 @@ separate_polarity <- function(lib, polarity) {
 }
 
 
-#' Add formula to the mgf library
+#' Add formula to the gnps library and remove wrong SMILES
 #'
-#' \code{complete_mgf} offers a way to complete the molecular formula filed in
+#' \code{complete_gnps} offers a way to complete the molecular formula filed in
 #' the mgf file.
 #'
 #' The mgf file downloaded from GNPS has no molecular formula (MF). Therefore, this
@@ -67,11 +67,14 @@ separate_polarity <- function(lib, polarity) {
 #' @export
 #'
 #' @import future.apply
+#' @importFrom ChemmineR smiles2sdf MF
+#' @importFrom webchem is.smiles
 #'
 #' @rawNamespace import(ChemmineR, except = c(groups, view))
-complete_mgf <- function(lib){
+complete_gnps <- function(lib){
   future.apply::future_lapply(lib, function(x) {
-      x$Formula <-
+    x$Smiles <- ifelse(webchem::is.smiles(x$Smiles), x$Smiles, NA)
+    x$Formula <-
         tryCatch(ChemmineR::MF(ChemmineR::smiles2sdf(x$Smiles), addH = TRUE)[[1]],
                  error = function(e) NULL)
 
