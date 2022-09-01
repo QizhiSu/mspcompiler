@@ -54,7 +54,7 @@ clean_ri_dat <- function(file){
   tmp <- tmp[tmp %in% keep_char]
 
   # Write it into a *.txt to allow being re-read in text form
-  write_file(tmp, "tmp.txt")
+  readr::write_file(tmp, "tmp.txt")
   tmp <- readLines("tmp.txt")
   # Every useful entry starts with C/R/U following a number, which is the ID of
   # the compound. So, only keep these elements
@@ -62,13 +62,22 @@ clean_ri_dat <- function(file){
 
   # Write it into a *.txt to allowing being read in tab delimited form
   writeLines(tmp, "tmp.txt")
-  tmp <- rio::import("tmp.txt", header = FALSE)
+  tmp <- rio::import("tmp.txt", header = FALSE, quote = "")
   # Set column names
   names(tmp) <- c('ID', 'Name', 'Molecular_Formula', 'RI', 'Column_Type',
                   'Column_Polarity', 'Column', "Column_Length", 'Carrier_Gas',
                   'Substrate', 'Column_Diameter', 'Phase_Thickness', 'RI_Type',
                   'Ramp_Type', 'Temperature1', 'Temperature2',
                   'Temperature_Increment', 'Time1', 'Time2', "Ramp_Detail", "Note")
+  tmp$Column_Polarity <- sub("non-std", "Non standard", tmp$Column_Polarity)
+  tmp$Column_Polarity <- sub("standard-non", "standard non", tmp$Column_Polarity)
+  tmp$Column_Polarity <- sub("standatd", "standard", tmp$Column_Polarity)
+  tmp$Column_Polarity <- sub("semi-std-", "Semi-standard ", tmp$Column_Polarity)
+  tmp$Column_Polarity <- sub("SSNP", "Semi-standard non-polar", tmp$Column_Polarity)
+  tmp$Column_Polarity <- sub("SNP", "Standard non-polar", tmp$Column_Polarity)
+  tmp$Column_Polarity <- sub("SP", "Standard polar", tmp$Column_Polarity)
+  tmp$Column_Polarity <- sub("std-", "Standard ", tmp$Column_Polarity)
+  tmp$Column_Polarity <- sub("Standard semi-polar", "Semi-standard non-polar", tmp$Column_Polarity)
 
   # Remove the temporary file
   file.remove("tmp.txt")
@@ -109,7 +118,7 @@ clean_user_dbu <- function(file) {
   # Write it into a *.txt to allow being re-read in text form
   readr::write_file(tmp, "tmp.txt")
 
-  tmp <- suppressWarnings(readLines("tmp.txt"))
+  tmp <- readLines("tmp.txt", warn = FALSE)
   # remove everything before the second continuous \t from last
   tmp <- str_remove(tmp, "^.*\t(?=\t)")
   tmp <- str_remove_all(tmp, "^\t.{1,2}$") # remove the remaining starting \t
@@ -117,11 +126,19 @@ clean_user_dbu <- function(file) {
   tmp <- tmp[str_detect(tmp, "^.+")]
   tmp <- tmp[str_count(tmp) > 4]
   tmp <- str_replace(tmp, " \\${2} \\$:28", "\t")
+  # " at the beginning of a line will give problem for reading with read_delim
+  tmp <- str_replace(tmp, '^"', "")
   # Write it into a *.txt to allowing being read in tab delimited form
   writeLines(tmp, "tmp.txt")
 
-  tmp <- rio::import("tmp.txt", header = FALSE)
+  tmp <- suppressMessages(
+    suppressWarnings(
+      readr::read_delim("tmp.txt", col_names = FALSE)
+    ))
+
   colnames(tmp) <- c("Name", "InChIKey", "ID", "Formula")
+  tmp <- tmp[!is.na(tmp$ID), ]
+  tmp$InChIKey <- sub(" .*$", "", tmp$InChIKey)
 
   file.remove("tmp.txt")
   return(tmp)

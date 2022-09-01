@@ -1,6 +1,6 @@
 Package: mspcompiler
 Title: Compile Mass Spectral Libraries from Various Sources
-Version: 0.1.3
+Version: 0.1.4
 Authors@R: 
     person(given = "Qizhi",
            family = "Su",
