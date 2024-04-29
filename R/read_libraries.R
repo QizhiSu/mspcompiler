@@ -72,11 +72,11 @@ read_lib <-
         if (remove_ri) {
           RI <- NA # nolint: object_name_linter.
         } else {
-          RI <- cmp[grep("^retention[ _]index:|RI:", # nolint
+          RI <- cmp[grep("^retention[ _]index:|^RI:", # nolint
             cmp,
             ignore.case = TRUE
           )] # nolint: object_name_linter.
-          RI <- gsub("^retention[ _]index: |RI: ", "", # nolint
+          RI <- gsub("^retention[ _]index: |^RI: ", "", # nolint
             RI,
             ignore.case = TRUE
           ) # nolint: object_name_linter.
