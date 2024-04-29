@@ -46,52 +46,58 @@ read_lib <-
     # Individual compounds are recognized differently
     # depending on the format
     if (format == "msp") {
-      start_line <- grep('^name:', tmp, ignore.case = TRUE)
+      start_line <- grep("^name:", tmp, ignore.case = TRUE)
     } else {
-      start_line <- grep('^begin ions', tmp, ignore.case = TRUE)
+      start_line <- grep("^begin ions", tmp, ignore.case = TRUE)
     }
     num_line <- diff(c(start_line, length(tmp) + 1))
-    split_factor <- rep(1:length(start_line), num_line)
+    split_factor <- rep(seq_along(start_line), num_line)
     cmp_list <- split(tmp, split_factor)
 
     # For EI spectral libraries
     if (type == "EI") {
       get_msp <- function(cmp) {
-        name <- cmp[grep('^name:', cmp, ignore.case = TRUE)]
-        name <- gsub('^name: ', '', name, ignore.case = TRUE)
-        smiles <- cmp[grep('^smiles:', cmp, ignore.case = TRUE)]
-        smiles <- gsub('^smiles: ', '', smiles, ignore.case = TRUE)
-        inchikey <- cmp[grep('^inchikey:', cmp, ignore.case = TRUE)]
-        inchikey <- gsub('inchikey: ', '', inchikey, ignore.case = TRUE)
-        formula <- cmp[grep('^formula:', cmp, ignore.case = TRUE)]
-        formula <- gsub('^formula: ', '', formula, ignore.case = TRUE)
-        mw <- cmp[grep('^mw:',  cmp, ignore.case = TRUE)]
-        mw <- gsub('^mw: ', '', mw, ignore.case = TRUE)
-        comment <- cmp[grep('^comments?:', cmp, ignore.case = TRUE)]
-        comment <- gsub('^comments?: ', '', comment, ignore.case = TRUE)
+        name <- cmp[grep("^name:", cmp, ignore.case = TRUE)]
+        name <- gsub("^name: ", "", name, ignore.case = TRUE)
+        smiles <- cmp[grep("^smiles:", cmp, ignore.case = TRUE)]
+        smiles <- gsub("^smiles: ", "", smiles, ignore.case = TRUE)
+        inchikey <- cmp[grep("^inchikey:", cmp, ignore.case = TRUE)]
+        inchikey <- gsub("inchikey: ", "", inchikey, ignore.case = TRUE)
+        formula <- cmp[grep("^formula:", cmp, ignore.case = TRUE)]
+        formula <- gsub("^formula: ", "", formula, ignore.case = TRUE)
+        mw <- cmp[grep("^mw:", cmp, ignore.case = TRUE)]
+        mw <- gsub("^mw: ", "", mw, ignore.case = TRUE)
+        comment <- cmp[grep("^comments?:", cmp, ignore.case = TRUE)]
+        comment <- gsub("^comments?: ", "", comment, ignore.case = TRUE)
         if (remove_ri) {
-          RI <- NA
+          RI <- NA # nolint: object_name_linter.
         } else {
-          RI <- cmp[grep('^retentionindex:', cmp, ignore.case = TRUE)]
-          RI <- gsub('^retentionindex: ', '', RI, ignore.case = TRUE)
-          RI <- round(as.numeric(RI))
+          RI <- cmp[grep("^retention(_)?index:", # nolint
+            cmp,
+            ignore.case = TRUE
+          )] # nolint: object_name_linter.
+          RI <- gsub("^retention(_)?index: ", "", # nolint
+            RI,
+            ignore.case = TRUE
+          ) # nolint: object_name_linter.
+          RI <- round(as.numeric(RI)) # nolint: object_name_linter.
         }
         # Dealing with the spectrum
-        peak_numbers <- cmp[grep('^num peaks:', cmp, ignore.case = TRUE)]
-        peak_number <- gsub('^num peaks: ?', '', peak_numbers, ignore.case = TRUE)
+        peak_numbers <- cmp[grep("^num peaks:", cmp, ignore.case = TRUE)]
+        peak_number <- gsub("^num peaks: ?", "", peak_numbers, ignore.case = TRUE)
         # matrix of masses and intensities
         if (as.numeric(peak_number) > 0) {
           # Determine position of mass intensity pairs
-          mass_inten_posi <- which(grepl('^[0-9]', cmp) & !grepl(': ', cmp))
+          mass_inten_posi <- which(grepl("^[0-9]", cmp) & !grepl(": ", cmp))
           # Turn mass intensity pairs to a numeric vector
-          mass_inten <- str_remove_all(cmp[mass_inten_posi], '\n')
+          mass_inten <- str_remove_all(cmp[mass_inten_posi], "\n")
           mass_inten <- str_remove(mass_inten, '".*"$')
-          mass_inten <- unlist(strsplit(mass_inten, '\t| '))
+          mass_inten <- unlist(strsplit(mass_inten, "\t| "))
           mass_inten <-
-            as.numeric(mass_inten[grep('^[0-9].*[0-9]$|^[0-9]$', mass_inten)])
+            as.numeric(mass_inten[grep("^[0-9].*[0-9]$|^[0-9]$", mass_inten)])
           # Extract mz and intensity
           mz <- mass_inten[seq(1, length(mass_inten), 2)]
-          intensity <-  mass_inten[seq(2, length(mass_inten), 2)]
+          intensity <- mass_inten[seq(2, length(mass_inten), 2)]
           spectra <- cbind.data.frame(mz = mz, ins = intensity)
           return(
             list(
@@ -99,10 +105,10 @@ read_lib <-
               InChIKey = inchikey,
               Smiles = smiles,
               Formula = formula,
-              'Molecular weight' = mw,
+              "Molecular weight" = mw,
               RI = RI,
               Comment = comment,
-              'Number of peaks'  =  peak_number,
+              "Number of peaks" = peak_number,
               Spectra = spectra
             )
           )
@@ -112,11 +118,11 @@ read_lib <-
               Name = name,
               InChIKey = inchikey,
               Smiles = smiles,
-              'Molecular weight' = mw,
+              "Molecular weight" = mw,
               RI = RI,
               Comment = comment,
               Formula = formula,
-              'Number of peaks' = peak_number
+              "Number of peaks" = peak_number
             )
           )
         }
@@ -126,113 +132,138 @@ read_lib <-
     } else {
       get_msp <- function(cmp) {
         if (format == "msp") {
-          name <- cmp[grep('^name:', cmp, ignore.case = TRUE)]
-          name <- gsub('^name: ', '', name, ignore.case = TRUE)
-          smiles <- cmp[grep('^smiles:', cmp, ignore.case = TRUE)]
-          smiles <- gsub('^smiles: ', '', smiles, ignore.case = TRUE)
-          inchikey <- cmp[grep('^inchikey:',  cmp, ignore.case = TRUE)]
-          inchikey <- gsub('inchikey: ', '', inchikey, ignore.case = TRUE)
-          formula <- cmp[grep('^formula:', cmp, ignore.case = TRUE)]
-          formula <- gsub('^formula: ', '', formula, ignore.case = TRUE)
-          precursor_ion <- cmp[grep('^precursormz:',  cmp, ignore.case = TRUE)]
-          precursor_ion <- gsub('^precursormz: ', '',
-                                precursor_ion, ignore.case = TRUE)
-          precursor_type <-cmp[grep('^precursor_?type:',
-                                    cmp, ignore.case = TRUE)]
-          precursor_type <-gsub('^precursor_?type: ', '',
-                                precursor_type, ignore.case = TRUE)
-          ion_mode <- cmp[grep('ion_?mode:', cmp, ignore.case = TRUE)]
-          ion_mode <- gsub('ion_?mode: ', '', ion_mode, ignore.case = TRUE)
+          name <- cmp[grep("^name:", cmp, ignore.case = TRUE)]
+          name <- gsub("^name: ", "", name, ignore.case = TRUE)
+          smiles <- cmp[grep("^smiles:", cmp, ignore.case = TRUE)]
+          smiles <- gsub("^smiles: ", "", smiles, ignore.case = TRUE)
+          inchikey <- cmp[grep("^inchikey:", cmp, ignore.case = TRUE)]
+          inchikey <- gsub("inchikey: ", "", inchikey, ignore.case = TRUE)
+          formula <- cmp[grep("^formula:", cmp, ignore.case = TRUE)]
+          formula <- gsub("^formula: ", "", formula, ignore.case = TRUE)
+          precursor_ion <- cmp[grep("^precursormz:", cmp, ignore.case = TRUE)]
+          precursor_ion <- gsub("^precursormz: ", "",
+            precursor_ion,
+            ignore.case = TRUE
+          )
+          precursor_type <- cmp[grep("^precursor_?type:",
+            cmp,
+            ignore.case = TRUE
+          )]
+          precursor_type <- gsub("^precursor_?type: ", "",
+            precursor_type,
+            ignore.case = TRUE
+          )
+          ion_mode <- cmp[grep("ion_?mode:", cmp, ignore.case = TRUE)]
+          ion_mode <- gsub("ion_?mode: ", "", ion_mode, ignore.case = TRUE)
           if (remove_rt) {
             retention_time <- NA
           } else {
-            retention_time <- cmp[grep('^retention_?time:',
-                                       cmp, ignore.case = TRUE)]
-            retention_time <- gsub('^retention_?time: ', '',
-                                   retention_time, ignore.case = TRUE)
+            retention_time <- cmp[grep("^retention_?time:",
+              cmp,
+              ignore.case = TRUE
+            )]
+            retention_time <- gsub("^retention_?time: ", "",
+              retention_time,
+              ignore.case = TRUE
+            )
           }
-          ccs <- cmp[grep('^ccs:', cmp, ignore.case = TRUE)]
-          ccs <- gsub('^ccs: ', '', ccs, ignore.case = TRUE)
-          collision_energy <- cmp[grep('^collision_?energy:',
-                                       cmp, ignore.case = TRUE)]
-          collision_energy <- gsub('^collision_?energy: ', '',
-                                   collision_energy, ignore.case = TRUE)
-          instrument_type <- cmp[grep('^instrument_?type:',
-                                      cmp, ignore.case = TRUE)]
-          instrument_type <- gsub('^instrument_?type: ', '',
-                                  instrument_type, ignore.case = TRUE)
-          comment <- cmp[grep('^comments?:', cmp, ignore.case = TRUE)]
-          comment <- gsub('^comments?: ', '', comment, ignore.case = TRUE)
-          peak_numbers <- cmp[grep('^num peaks:', cmp, ignore.case = TRUE)]
-          peak_number <- gsub('^num peaks: *', '',
-                              peak_numbers, ignore.case = TRUE)
+          ccs <- cmp[grep("^ccs:", cmp, ignore.case = TRUE)]
+          ccs <- gsub("^ccs: ", "", ccs, ignore.case = TRUE)
+          collision_energy <- cmp[grep("^collision_?energy:",
+            cmp,
+            ignore.case = TRUE
+          )]
+          collision_energy <- gsub("^collision_?energy: ", "",
+            collision_energy,
+            ignore.case = TRUE
+          )
+          instrument_type <- cmp[grep("^instrument_?type:",
+            cmp,
+            ignore.case = TRUE
+          )]
+          instrument_type <- gsub("^instrument_?type: ", "",
+            instrument_type,
+            ignore.case = TRUE
+          )
+          comment <- cmp[grep("^comments?:", cmp, ignore.case = TRUE)]
+          comment <- gsub("^comments?: ", "", comment, ignore.case = TRUE)
+          peak_numbers <- cmp[grep("^num peaks:", cmp, ignore.case = TRUE)]
+          peak_number <- gsub("^num peaks: *", "",
+            peak_numbers,
+            ignore.case = TRUE
+          )
 
-        # For mgf format
+          # For mgf format
         } else {
-          name <- cmp[grep('^name=', cmp, ignore.case = TRUE)]
-          name <- gsub('^name=', '', name, ignore.case = TRUE)
-          name <- gsub(' \\[?[0-9]?M(-|\\+).*$', '', name, ignore.case = TRUE)
-          smiles <- cmp[grep('^smiles=', cmp, ignore.case = TRUE)]
-          smiles <- trimws(gsub('^smiles=', '', smiles, ignore.case = TRUE))
-          inchikey <- cmp[grep('^inchiaux=', cmp, ignore.case = TRUE)]
-          inchikey <- gsub('^inchiaux=', '', inchikey, ignore.case = TRUE)
+          name <- cmp[grep("^name=", cmp, ignore.case = TRUE)]
+          name <- gsub("^name=", "", name, ignore.case = TRUE)
+          name <- gsub(" \\[?[0-9]?M(-|\\+).*$", "", name, ignore.case = TRUE)
+          smiles <- cmp[grep("^smiles=", cmp, ignore.case = TRUE)]
+          smiles <- trimws(gsub("^smiles=", "", smiles, ignore.case = TRUE))
+          inchikey <- cmp[grep("^inchiaux=", cmp, ignore.case = TRUE)]
+          inchikey <- gsub("^inchiaux=", "", inchikey, ignore.case = TRUE)
           formula <- NA
-          precursor_ion <- cmp[grep('^pepmass=',  cmp, ignore.case = TRUE)]
-          precursor_ion <- gsub('^pepmass=', '',
-                                precursor_ion, ignore.case = TRUE)
-          ion_mode <- cmp[grep('^ionmode=', cmp, ignore.case = TRUE)]
-          ion_mode <- gsub('^ionmode=', '', ion_mode, ignore.case = TRUE)
+          precursor_ion <- cmp[grep("^pepmass=", cmp, ignore.case = TRUE)]
+          precursor_ion <- gsub("^pepmass=", "",
+            precursor_ion,
+            ignore.case = TRUE
+          )
+          ion_mode <- cmp[grep("^ionmode=", cmp, ignore.case = TRUE)]
+          ion_mode <- gsub("^ionmode=", "", ion_mode, ignore.case = TRUE)
           retention_time <- NA
           ccs <- NA
           collision_energy <- NA
           instrument_type <- NA
           precursor_type <- str_extract(name, "\\[?[0-9]?M(-|\\+).*$")
-          if (grepl('\\](-\\+)+$', precursor_type)) {
+          if (grepl("\\](-\\+)+$", precursor_type)) {
             precursor_type <- precursor_type
-          } else{
-            if (grepl('positive', ion_mode, ignore.case = TRUE)) {
-              if (grepl('\\[', precursor_type)) {
+          } else {
+            if (grepl("positive", ion_mode, ignore.case = TRUE)) {
+              if (grepl("\\[", precursor_type)) {
                 precursor_type <- paste0(precursor_type, "+")
-              } else{
+              } else {
                 precursor_type <- paste0("[", precursor_type, "]+")
               }
-            } else{
-              if (grepl('\\[', precursor_type)) {
+            } else {
+              if (grepl("\\[", precursor_type)) {
                 precursor_type <- paste0(precursor_type, "-")
-              } else{
+              } else {
                 precursor_type <- paste0("[", precursor_type, "]-")
               }
             }
           }
-          PI <- cmp[grep('PI=', cmp, ignore.case = TRUE)]
-          collector <- cmp[grep('^datacollector=', cmp, ignore.case = TRUE)]
-          submit_user <- cmp[grep('^submituser=', cmp, ignore.case = TRUE)]
-          spectrum_type <- cmp[grep('^mslevel', cmp, ignore.case = TRUE)]
-          library_quality <- cmp[grep('^libraryquality=',
-                                      cmp, ignore.case = TRUE)]
+          PI <- cmp[grep("PI=", cmp, ignore.case = TRUE)] # nolint: object_name_linter.
+          collector <- cmp[grep("^datacollector=", cmp, ignore.case = TRUE)]
+          submit_user <- cmp[grep("^submituser=", cmp, ignore.case = TRUE)]
+          spectrum_type <- cmp[grep("^mslevel", cmp, ignore.case = TRUE)]
+          library_quality <- cmp[grep("^libraryquality=",
+            cmp,
+            ignore.case = TRUE
+          )]
           comment <- paste(PI,
-                           collector,
-                           submit_user,
-                           spectrum_type,
-                           library_quality,
-                           sep = "; ")
-          peak_number <- length(which(grepl('^[0-9]', cmp)))
+            collector,
+            submit_user,
+            spectrum_type,
+            library_quality,
+            sep = "; "
+          )
+          peak_number <- length(which(grepl("^[0-9]", cmp)))
         }
 
         # Manipulation of peak matrix are the same for both msp and mgf
-        if(rlang::is_empty(peak_number)) peak_number <- "0"
+        if (rlang::is_empty(peak_number)) peak_number <- "0"
         if (as.numeric(peak_number) > 0) {
           # Determine position of mass intensity pairs
-          mass_inten_posi <- which(grepl('^[0-9]', cmp) & !grepl(': ', cmp))
+          mass_inten_posi <- which(grepl("^[0-9]", cmp) & !grepl(": ", cmp))
           # Turn mass intensity pairs to a numeric vector
-          mass_inten <- str_remove_all(cmp[mass_inten_posi], '\n')
+          mass_inten <- str_remove_all(cmp[mass_inten_posi], "\n")
           mass_inten <- str_remove(mass_inten, '".*"$')
-          mass_inten <- unlist(strsplit(mass_inten, '\t| '))
+          mass_inten <- unlist(strsplit(mass_inten, "\t| "))
           mass_inten <-
-            as.numeric(mass_inten[grep('^[0-9].*[0-9]$|^[0-9]$', mass_inten)])
+            as.numeric(mass_inten[grep("^[0-9].*[0-9]$|^[0-9]$", mass_inten)])
           # Extract mz and intensity
           mz <- mass_inten[seq(1, length(mass_inten), 2)]
-          intensity <-  mass_inten[seq(2, length(mass_inten), 2)]
+          intensity <- mass_inten[seq(2, length(mass_inten), 2)]
           spectra <- cbind.data.frame(mz = mz, ins = intensity)
           return(
             list(
@@ -243,12 +274,12 @@ read_lib <-
               Formula = formula,
               Smiles = smiles,
               InChIKey = inchikey,
-              RetentionTime =  retention_time,
+              RetentionTime = retention_time,
               CCS = ccs,
               CollisionEnergy = collision_energy,
               InstrumentType = instrument_type,
               Comment = comment,
-              'Number of peaks' = peak_number,
+              "Number of peaks" = peak_number,
               Spectra = spectra
             )
           )
@@ -262,12 +293,12 @@ read_lib <-
               Formula = formula,
               Smiles = smiles,
               InChIKey = inchikey,
-              RetentionTime =  retention_time,
+              RetentionTime = retention_time,
               CCS = ccs,
               CollisionEnergy = collision_energy,
               InstrumentType = instrument_type,
               Comment = comment,
-              'Number of peaks' = peak_number
+              "Number of peaks" = peak_number
             )
           )
         }
@@ -301,4 +332,3 @@ read_multilibs <- function(folder) {
   all_files <- list.files(path = folder, pattern = "*.msp", full.names = TRUE)
   do.call(c, lapply(all_files, read_lib))
 }
-
