@@ -11,7 +11,7 @@
 #' @export
 write_EI_msp <- function(lib, filename) { # nolint
   zz <- file(description = filename, open = "w")
-  for (i in 1:length(lib)) {
+  for (i in seq_len(lib)) {
     cat(paste("Name: ", lib[[i]]$Name, "\n", sep = ""), file = zz)
     cat(paste("InChIKey: ", lib[[i]]$InChIKey, "\n", sep = ""), file = zz)
     cat(paste("SMILES: ", lib[[i]]$Smiles, "\n", sep = ""), file = zz)
@@ -40,9 +40,9 @@ write_EI_msp <- function(lib, filename) { # nolint
 #'
 #' @return No return but create a msp file
 #' @export
-write_MS2_msp <- function(lib, filename) {
+write_MS2_msp <- function(lib, filename) { # nolint
   zz <- file(description = filename, open = "w")
-  for (i in 1:length(lib)) {
+  for (i in seq_len(lib)){
     cat(paste("Name: ", lib[[i]]$Name, "\n", sep = ""), file = zz)
     cat(paste("PrecursorMZ: ", lib[[i]]$PrecursorMZ, "\n", sep = ""), file = zz)
     cat(paste("PrecursorType: ", lib[[i]]$PrecusorType, "\n", sep = ""), file = zz)

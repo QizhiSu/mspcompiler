@@ -64,7 +64,7 @@ combine_mol2sdf <- function(input, output, use_filename = FALSE) {
   sdfset <- SDFset(SDFlist = sdfset) # Turn it back to SDFset class
   # Assign cid for each SDF. It is important! Otherwise no information
   # will be converted
-  cid(sdfset) <- paste0("CMP", seq(length(sdfset)))
+  cid(sdfset) <- paste0("CMP", seq_along(sdfset))
   sdfset <- sdfset[validSDF(sdfset)] # Important to remove invalid sdf
 
   write.SDF(sdfset, output)
