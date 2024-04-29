@@ -27,7 +27,7 @@
 #' @import future.apply
 assign_smiles <- function(lib, structure_data, match = "name") {
   future.apply::future_lapply(lib, function(x) {
-    if(match == "name") {
+    if (match == "name") {
       x$Smiles <-
         structure_data$Smiles[match(tolower(x$Name), structure_data$Name)]
     } else {
@@ -56,12 +56,12 @@ assign_smiles <- function(lib, structure_data, match = "name") {
 #'
 #' @import future.apply
 #' @importFrom qdapRegex rm_between
-reorganize_mona <- function(lib){
+reorganize_mona <- function(lib) {
   future.apply::future_lapply(lib, function(x) {
     tmp <- unlist(qdapRegex::rm_between(x$Comment, '"', '"', extract = TRUE))
 
     x$Smiles <- tmp[grepl("^SMILES=", tmp, ignore.case = TRUE)]
-    x$Smiles <- gsub('^SMILES=', '', x$Smiles, ignore.case = TRUE)
+    x$Smiles <- gsub("^SMILES=", "", x$Smiles, ignore.case = TRUE)
 
     return(x)
   })
@@ -96,30 +96,29 @@ reorganize_mona <- function(lib){
 #' @import future.apply
 change_meta <-
   function(lib, CE = NA, instrument = NA, comment = NA, add = FALSE) {
-    future.apply::future_lapply(lib, function(x){
-      if(is.na(CE)){
-        x$CollisionEnergy = x$CollisionEnergy
+    future.apply::future_lapply(lib, function(x) {
+      if (is.na(CE)) {
+        x$CollisionEnergy <- x$CollisionEnergy
       } else {
-        x$CollisionEnergy = CE
+        x$CollisionEnergy <- CE
       }
 
-      if(is.na(instrument)) {
-        x$InstrumentType = x$InstrumentType
+      if (is.na(instrument)) {
+        x$InstrumentType <- x$InstrumentType
       } else {
-        x$InstrumentType = instrument
+        x$InstrumentType <- instrument
       }
 
-      if(is.na(comment)) {
-        x$Comment = x$comment
+      if (is.na(comment)) {
+        x$Comment <- x$comment
       } else {
-        if(add == FALSE) {
-          x$Comment = comment
+        if (add == FALSE) {
+          x$Comment <- comment
         } else {
-          x$Comment = paste(x$Comment, comment, sep = ";")
+          x$Comment <- paste(x$Comment, comment, sep = ";")
         }
       }
 
       return(x)
     })
   }
-

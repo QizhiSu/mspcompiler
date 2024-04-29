@@ -9,19 +9,20 @@
 #'
 #' @return No return but create a msp file
 #' @export
-write_EI_msp <- function(lib, filename){
+write_EI_msp <- function(lib, filename) { # nolint
   zz <- file(description = filename, open = "w")
-  for(i in 1:length(lib)){
+  for (i in 1:length(lib)) {
     cat(paste("Name: ", lib[[i]]$Name, "\n", sep = ""), file = zz)
     cat(paste("InChIKey: ", lib[[i]]$InChIKey, "\n", sep = ""), file = zz)
     cat(paste("SMILES: ", lib[[i]]$Smiles, "\n", sep = ""), file = zz)
     cat(paste("Formula: ", lib[[i]]$Formula, "\n", sep = ""), file = zz)
-    cat(paste("MW: ", lib[[i]]$'Molecular weight', "\n", sep = ""), file = zz)
+    cat(paste("MW: ", lib[[i]]$"Molecular weight", "\n", sep = ""), file = zz)
     cat(paste("RI: ", lib[[i]]$RI, "\n", sep = ""), file = zz)
     cat(paste("Comment: ", lib[[i]]$Comment, "\n", sep = ""), file = zz)
-    cat(paste("Num peaks: ", lib[[i]]$'Number of peaks', "\n", sep = ""), file = zz)
-    cat(paste(paste(lib[[i]]$Spectra$mz, lib[[i]]$Spectra$ins, sep =" "), "", sep = ""),
-        file = zz, sep = "\n")
+    cat(paste("Num peaks: ", lib[[i]]$"Number of peaks", "\n", sep = ""), file = zz)
+    cat(paste(paste(lib[[i]]$Spectra$mz, lib[[i]]$Spectra$ins, sep = " "), "", sep = ""),
+      file = zz, sep = "\n"
+    )
     cat("\r\n", file = zz)
   }
   close(zz)
@@ -39,9 +40,9 @@ write_EI_msp <- function(lib, filename){
 #'
 #' @return No return but create a msp file
 #' @export
-write_MS2_msp <- function(lib, filename){
+write_MS2_msp <- function(lib, filename) {
   zz <- file(description = filename, open = "w")
-  for(i in 1:length(lib)){
+  for (i in 1:length(lib)) {
     cat(paste("Name: ", lib[[i]]$Name, "\n", sep = ""), file = zz)
     cat(paste("PrecursorMZ: ", lib[[i]]$PrecursorMZ, "\n", sep = ""), file = zz)
     cat(paste("PrecursorType: ", lib[[i]]$PrecusorType, "\n", sep = ""), file = zz)
@@ -54,12 +55,11 @@ write_MS2_msp <- function(lib, filename){
     cat(paste("CollisionEnergy: ", lib[[i]]$CollisionEnergy, "\n", sep = ""), file = zz)
     cat(paste("InstrumentType: ", lib[[i]]$InstrumentType, "\n", sep = ""), file = zz)
     cat(paste("Comment: ", lib[[i]]$Comment, "\n", sep = ""), file = zz)
-    cat(paste("Num peaks: ", lib[[i]]$'Number of peaks', "\n", sep = ""), file = zz)
-    cat(paste(paste(lib[[i]]$Spectra$mz, lib[[i]]$Spectra$ins, sep =" "), "", sep = ""),
-        file = zz, sep = "\n")
+    cat(paste("Num peaks: ", lib[[i]]$"Number of peaks", "\n", sep = ""), file = zz)
+    cat(paste(paste(lib[[i]]$Spectra$mz, lib[[i]]$Spectra$ins, sep = " "), "", sep = ""),
+      file = zz, sep = "\n"
+    )
     cat("\r", file = zz)
   }
   close(zz)
 }
-
-

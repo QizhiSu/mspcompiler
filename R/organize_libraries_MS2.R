@@ -12,7 +12,7 @@
 #' @import future.apply
 remove_rt <- function(lib) {
   future.apply::future_lapply(lib, function(x) {
-    x$RetentionTime = NA
+    x$RetentionTime <- NA
 
     return(x)
   })
@@ -39,14 +39,16 @@ remove_rt <- function(lib) {
 #' @import rlist
 #' @importFrom rlang .data
 separate_polarity <- function(lib, polarity) {
-  if(polarity == "pos") {
+  if (polarity == "pos") {
     tmp <-
       rlist::list.filter(
-        lib, grepl("P", .data$IonMode, ignore.case = TRUE))
+        lib, grepl("P", .data$IonMode, ignore.case = TRUE)
+      )
   } else {
     tmp <-
       rlist::list.filter(
-        lib, grepl("N", .data$IonMode, ignore.case = TRUE))
+        lib, grepl("N", .data$IonMode, ignore.case = TRUE)
+      )
   }
 
   return(tmp)
@@ -71,12 +73,13 @@ separate_polarity <- function(lib, polarity) {
 #' @importFrom webchem is.smiles
 #'
 #' @rawNamespace import(ChemmineR, except = c(groups, view))
-complete_gnps <- function(lib){
+complete_gnps <- function(lib) {
   future.apply::future_lapply(lib, function(x) {
     x$Smiles <- ifelse(webchem::is.smiles(x$Smiles), x$Smiles, NA)
     x$Formula <-
-        tryCatch(ChemmineR::MF(ChemmineR::smiles2sdf(x$Smiles), addH = TRUE)[[1]],
-                 error = function(e) NULL)
+      tryCatch(ChemmineR::MF(ChemmineR::smiles2sdf(x$Smiles), addH = TRUE)[[1]],
+        error = function(e) NULL
+      )
 
     return(x)
   })

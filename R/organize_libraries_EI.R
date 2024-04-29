@@ -12,7 +12,7 @@
 #' @import future.apply
 remove_ri <- function(lib) {
   future.apply::future_lapply(lib, function(x) {
-    x$RI = NA
+    x$RI <- NA
 
     return(x)
   })
@@ -20,9 +20,11 @@ remove_ri <- function(lib) {
 
 
 # Define characters to be kept and keep them as raw.
-keep_char <- c(letters, LETTERS, 0:9,  '*', ".", ",", ';', '"', "'", '\\',
-               '/', ':', '_', '^', '%', '&', '{', '}', '[', ']', '(', ')',
-               '+', '-', '|', '=', '@', '#', '!', '$', '\n', "\t", " ") %>%
+keep_char <- c(
+  letters, LETTERS, 0:9, "*", ".", ",", ";", '"', "'", "\\",
+  "/", ":", "_", "^", "%", "&", "{", "}", "[", "]", "(", ")",
+  "+", "-", "|", "=", "@", "#", "!", "$", "\n", "\t", " "
+) %>%
   sapply(charToRaw)
 
 
@@ -38,6 +40,7 @@ keep_char <- c(letters, LETTERS, 0:9,  '*', ".", ",", ';', '"', "'", '\\',
 #' so that we can better leverage the RI information present in the NIST library
 #' and to incorporate them into the msp file.
 #'
+#'
 #' @param file The "ri.dat" file in the installation path
 #'   (e.g., "~/Programs/nist17/mssearch").
 #'
@@ -45,11 +48,11 @@ keep_char <- c(letters, LETTERS, 0:9,  '*', ".", ",", ';', '"', "'", '\\',
 #'
 #' @import readr
 #' @import rio
-clean_ri_dat <- function(file){
+clean_ri_dat <- function(file) {
   # Read the file in binary.
   tmp <- readr::read_file_raw(file)
   # Convert all NUL characters to \n
-  tmp[tmp == 00] = charToRaw("\n")
+  tmp[tmp == 00] <- charToRaw("\n")
   # Keep only pre-defined characters
   tmp <- tmp[tmp %in% keep_char]
 
@@ -62,22 +65,15 @@ clean_ri_dat <- function(file){
 
   # Write it into a *.txt to allowing being read in tab delimited form
   writeLines(tmp, "tmp.txt")
-  tmp <- rio::import("tmp.txt", header = FALSE, quote = "")
+  tmp <- read.delim("tmp.txt", header = FALSE)
   # Set column names
-  names(tmp) <- c('ID', 'Name', 'Molecular_Formula', 'RI', 'Column_Type',
-                  'Column_Polarity', 'Column', "Column_Length", 'Carrier_Gas',
-                  'Substrate', 'Column_Diameter', 'Phase_Thickness', 'RI_Type',
-                  'Ramp_Type', 'Temperature1', 'Temperature2',
-                  'Temperature_Increment', 'Time1', 'Time2', "Ramp_Detail", "Note")
-  tmp$Column_Polarity <- sub("non-std", "Non standard", tmp$Column_Polarity)
-  tmp$Column_Polarity <- sub("standard-non", "standard non", tmp$Column_Polarity)
-  tmp$Column_Polarity <- sub("standatd", "standard", tmp$Column_Polarity)
-  tmp$Column_Polarity <- sub("semi-std-", "Semi-standard ", tmp$Column_Polarity)
-  tmp$Column_Polarity <- sub("SSNP", "Semi-standard non-polar", tmp$Column_Polarity)
-  tmp$Column_Polarity <- sub("SNP", "Standard non-polar", tmp$Column_Polarity)
-  tmp$Column_Polarity <- sub("SP", "Standard polar", tmp$Column_Polarity)
-  tmp$Column_Polarity <- sub("std-", "Standard ", tmp$Column_Polarity)
-  tmp$Column_Polarity <- sub("Standard semi-polar", "Semi-standard non-polar", tmp$Column_Polarity)
+  names(tmp) <- c(
+    "ID", "Name", "Molecular_Formula", "RI", "Column_Type",
+    "Column_Polarity", "Column", "Column_Length", "Carrier_Gas",
+    "Substrate", "Column_Diameter", "Phase_Thickness", "RI_Type",
+    "Ramp_Type", "Temperature1", "Temperature2",
+    "Temperature_Increment", "Time1", "Time2", "Ramp_Detail", "Note"
+  )
 
   # Remove the temporary file
   file.remove("tmp.txt")
@@ -110,9 +106,9 @@ clean_ri_dat <- function(file){
 clean_user_dbu <- function(file) {
   tmp <- readr::read_file_raw(file)
   # Convert all SOH characters to \n
-  tmp[tmp == 01] = charToRaw("\n")
+  tmp[tmp == 01] <- charToRaw("\n")
   # change all NUL to \t
-  tmp[tmp == 00] = charToRaw("\t")
+  tmp[tmp == 00] <- charToRaw("\t")
   # Keep only pre-defined characters
   tmp <- tmp[tmp %in% keep_char]
   # Write it into a *.txt to allow being re-read in text form
@@ -126,19 +122,11 @@ clean_user_dbu <- function(file) {
   tmp <- tmp[str_detect(tmp, "^.+")]
   tmp <- tmp[str_count(tmp) > 4]
   tmp <- str_replace(tmp, " \\${2} \\$:28", "\t")
-  # " at the beginning of a line will give problem for reading with read_delim
-  tmp <- str_replace(tmp, '^"', "")
   # Write it into a *.txt to allowing being read in tab delimited form
   writeLines(tmp, "tmp.txt")
 
-  tmp <- suppressMessages(
-    suppressWarnings(
-      readr::read_delim("tmp.txt", col_names = FALSE)
-    ))
-
+  tmp <- rio::import("tmp.txt", header = FALSE)
   colnames(tmp) <- c("Name", "InChIKey", "ID", "Formula")
-  tmp <- tmp[!is.na(tmp$ID), ]
-  tmp$InChIKey <- sub(" .*$", "", tmp$InChIKey)
 
   file.remove("tmp.txt")
   return(tmp)
@@ -190,14 +178,17 @@ extract_ri <- function(ri_dat, user_dbu) {
   nist_ri_inchikey <-
     clean_user_dbu(user_dbu) %>%
     as_tibble() %>%
-    mutate(ID = as.numeric(str_remove(.data$ID, "@")),
-           correspond_ID = row_number()) %>%
+    mutate(
+      ID = as.numeric(str_remove(.data$ID, "@")),
+      correspond_ID = row_number()
+    ) %>%
     arrange(!desc(.data$correspond_ID))
   # Assign inchikey to nist_ri
   nist_ri <-
     nist_ri %>%
     mutate(InChIKey = nist_ri_inchikey$InChIKey[
-      match(.data$correspond_ID, nist_ri_inchikey$correspond_ID)]) %>%
+      match(.data$correspond_ID, nist_ri_inchikey$correspond_ID)
+    ]) %>%
     relocate(.data$InChIKey, .before = .data$Molecular_Formula)
 
   return(nist_ri)
@@ -234,47 +225,46 @@ extract_ri <- function(ri_dat, user_dbu) {
 assign_ri <-
   function(lib, ri_table, polarity = "semi-polar") {
     # Subset RI based on polarity provided.
-    if(polarity == "semi-polar") {
+    if (polarity == "semi-polar") {
       exp_ri <- ri_table %>%
-        filter(.data$Column_Polarity == 'Semi-standard non-polar')
-    }
-    else if(polarity == "non-polar") {
+        filter(.data$Column_Polarity == "Semi-standard non-polar")
+    } else if (polarity == "non-polar") {
       exp_ri <- ri_table %>%
-        filter(.data$Column_Polarity == 'Standard non-polar')
-    }
-    else {
+        filter(.data$Column_Polarity == "Standard non-polar")
+    } else {
       exp_ri <- ri_table %>%
-        filter(.data$Column_Polarity == 'Standard polar')
+        filter(.data$Column_Polarity == "Standard polar")
     }
     # Remove Lee RI and only keep Capillary RI
     exp_ri <- exp_ri %>%
-      filter(.data$RI_Type != 'Lee RI' & .data$Column_Type == 'Capillary') %>%
+      filter(.data$RI_Type != "Lee RI" & .data$Column_Type == "Capillary") %>%
       group_by(.data$InChIKey) %>%
       # Experimental RI will be rounded to integer while predicted RI will have
       # two digit numbers. This tiny distinction can be easily differentiated
       # in MS-DIAL to help people understand how well the match is.
-      summarise(SD = round(sd(.data$RI)),
-                RI = round(median(.data$RI)),
-                number = n()) %>%
+      summarise(
+        SD = round(sd(.data$RI)),
+        RI = round(median(.data$RI)),
+        number = n()
+      ) %>%
       # Change SD values of only one replicate to 0
-      mutate(SD = case_when(is.na(.data$SD) ~ 0,
-                            TRUE ~ .data$SD)) %>%
+      mutate(SD = case_when(
+        is.na(.data$SD) ~ 0,
+        TRUE ~ .data$SD
+      )) %>%
       # In the case of multiple records, SD higher than 30 will be removed.
       filter(.data$SD <= 30)
 
     # Fourth, assign experimental RI to the msp file.
     future.apply::future_lapply(lib, function(x) {
-      if(length(x$InChIKey) != 0) {
-        if(is.na(x$RI)) {
-          x$RI = exp_ri$RI[match(x$InChIKey, exp_ri$InChIKey)]
+      if (length(x$InChIKey) != 0) {
+        if (is.na(x$RI)) {
+          x$RI <- exp_ri$RI[match(x$InChIKey, exp_ri$InChIKey)]
         }
       } else {
-        x$RI = NA
+        x$RI <- NA
       }
 
       return(x)
     })
   }
-
-
-
