@@ -48,6 +48,7 @@ keep_char <- c(
 #'
 #' @import readr
 #' @import rio
+#' @export
 clean_ri_dat <- function(file) {
   # Read the file in binary.
   tmp <- readr::read_file_raw(file)
@@ -103,6 +104,7 @@ clean_ri_dat <- function(file) {
 #' @import readr
 #' @import stringr
 #' @import rio
+#' @export
 clean_user_dbu <- function(file) {
   tmp <- readr::read_file_raw(file)
   # Convert all SOH characters to \n
@@ -120,12 +122,17 @@ clean_user_dbu <- function(file) {
   tmp <- str_remove_all(tmp, "^\t.{1,2}$") # remove the remaining starting \t
   tmp <- str_trim(tmp, side = "both")
   tmp <- tmp[str_detect(tmp, "^.+")]
-  tmp <- tmp[str_count(tmp) > 4]
+  tmp <- tmp[str_count(tmp) > 5] # previously 4, but in nist23, must be 5
   tmp <- str_replace(tmp, " \\${2} \\$:28", "\t")
+  tmp <- str_replace(tmp, "\\$\\$\\s*[^\\t]*", "")
+
   # Write it into a *.txt to allowing being read in tab delimited form
   writeLines(tmp, "tmp.txt")
 
-  tmp <- rio::import("tmp.txt", header = FALSE)
+  tmp <- rio::import(
+    "tmp.txt", fill = TRUE, comment.char = "",
+    header = FALSE, quote = "", sep = "\t"
+  )
   colnames(tmp) <- c("Name", "InChIKey", "ID", "Formula")
 
   file.remove("tmp.txt")
@@ -169,7 +176,7 @@ extract_ri <- function(ri_dat, user_dbu) {
   # Assign the order of the compound.
   nist_ri <-
     nist_ri %>%
-    mutate(correspond_ID = rep(seq(length(nist_ri_table)), nist_ri_table)) %>%
+    mutate(correspond_ID = rep(seq_along(nist_ri_table), nist_ri_table)) %>%
     relocate(.data$correspond_ID, .before = .data$ID)
 
   # Second, clean the USER.DBU file file and assign correspond ID.
